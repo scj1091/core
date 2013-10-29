@@ -28,7 +28,16 @@ class DatesController extends AppController {
  *
  * @var array
  */
-	public $helpers = array('SelectOptions', 'Formatting');
+	public $helpers = array('SelectOptions', 'Formatting', 'Cache');
+	
+/**
+ * Actions in this controller to be cached
+ * 
+ * @var array
+ */
+	/*public $cacheAction = array(
+		'public_calendar' => array('duration' => 3600)
+	);*/
 
 /**
  * Model::beforeFilter() callback
@@ -36,7 +45,7 @@ class DatesController extends AppController {
  * Used to override Acl permissions for this controller.
  */
 	public function beforeFilter() {
-		$this->Auth->allow('calendar', 'readable');
+		$this->Auth->allow('calendar', 'public_calendar', 'readable');
 		parent::beforeFilter();
 	}
 
@@ -206,6 +215,75 @@ class DatesController extends AppController {
 		foreach ($involvements as $involvement) {
 			$involvement_dates = $this->Date->generateDates($involvement['Involvement']['id'], $options);
 
+			if (!empty($involvement_dates)) {
+				$events[] = array_merge($involvement, array('dates' => $involvement_dates));
+			}
+		}
+		$this->set(compact('events'));
+	}
+	
+/**
+ * Displays public involvements only
+ * Filters based on Campus, Ministry, or Involvement ID
+ * Caches for 1 hour to minimize the load RH.org places
+ * on CORE
+ * 
+ * @params none
+ */
+	
+	public function public_calendar() {
+		$conditions = array();
+		$link = array(
+			'Date' => array(
+				'fields' => array(
+					'id'
+				)
+			)
+		);
+		
+		foreach(array('Ministry', 'Involvement', 'Campus') as $model) {
+			if (isset($this->passedArgs[$model])) {
+				$this->passedArgs[$model] = preg_replace('/[^\d\,]/', '', $this->passedArgs[$model]);
+				$ids = explode(',', $this->passedArgs[$model]);
+				switch ($model) {
+					case 'Involvement':
+						$conditions['and']['or']['Involvement.id'] = $ids;
+						break;
+					case 'Ministry':
+						$conditions['and']['or']['Involvement.ministry_id'] = $ids;
+						break;
+					case 'Campus':
+						$conditions['and']['or']['Ministry.campus_id'] = $ids;
+						$link[] = 'Ministry';
+						break;
+				}
+			}
+		}
+		
+		$options = array();
+		if (isset($this->params['url']['start'])) {
+			$options['start'] = $this->params['url']['start'];
+		}
+		if (isset($this->params['url']['end'])) {
+			$options['end'] = $this->params['url']['end'];
+		}
+		
+		$conditions['Involvement.active'] = true;
+		$conditions['Involvement.private'] = false;
+		$conditions['Date.start_date <>'] = null;
+		
+		$involvements = $this->Date->Involvement->find('all', array(
+			'fields' => array('id', 'name'),
+			'link' => $link,
+			'conditions' => $conditions,
+			'group' => 'Involvement.id',
+			'cacher' => '+1 hour'
+		));
+		
+		$events = array();
+		foreach ($involvements as $involvement) {
+			$involvement_dates = $this->Date->generateDates($involvement['Involvement']['id'], $options);
+			
 			if (!empty($involvement_dates)) {
 				$events[] = array_merge($involvement, array('dates' => $involvement_dates));
 			}
