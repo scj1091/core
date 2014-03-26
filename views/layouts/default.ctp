@@ -23,6 +23,7 @@
 
 		$this->AssetCompress->css('fullcalendar');
 		$this->AssetCompress->css('calendar');
+		$this->AssetCompress->css('joyride-2.1.css');
 
 		echo '<!--[if lt IE 9]>'.$this->Html->css('ie').'<![endif]-->';
 
@@ -36,6 +37,7 @@
 		$this->AssetCompress->script('jquery.plugins/jquery.qtip');
 		$this->AssetCompress->script('jquery.plugins/jquery.equalheights');
 		$this->AssetCompress->script('jquery.plugins/jquery.fullcalendar');
+		$this->AssetCompress->script('jquery.plugins/jquery.joyride-2.1.js');
 		$this->AssetCompress->script('wysiwyg/advanced');
 		$this->AssetCompress->script('wysiwyg/wysihtml5-0.3.0.min');
 

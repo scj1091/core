@@ -424,3 +424,36 @@ if ($activeUser['User']['id'] == $profile['User']['id'] && empty($activeUser['Us
 
 	</div>
 </div>
+<?php
+if ($firstLogin):
+echo <<<WALKTHROUGH
+<ol id="core-walkthrough" class="joyride-list" style="display: none;" data-joyride>
+	<li data-button="Get Started">
+		<p>Hi. Looks like you're new here. Let's take a tour of CORE's features.</p>
+	</li>
+	<li data-id="involvement" data-button="Next">
+		<p>This is your involvement section. It shows you a list of events, groups, and teams that you're a part of.</p>
+	</li>
+	<li data-id="user_calendar" data-button="Next">
+		<p>This is your calendar. It shows the dates of all your events and groups.</p>
+	</li>
+	<li data-id="nav-search" data-button="Next">
+		<p>This is the search box. If you're ever looking for something, try typing it in here.<p>
+	</li>
+	<li data-button="Edit my profile">
+		<p>Almost done. Before you get started, let's fill out your profile so we know a little about you, ok?</p>
+	</li>
+</ol>
+WALKTHROUGH;
+
+$this->Js->buffer('
+$("#core-walkthrough").joyride({
+	"autoStart": true,
+	"postRideCallback": function() {
+		window.location = "profiles/edit"
+	}
+});
+');
+endif;
+
+?>
