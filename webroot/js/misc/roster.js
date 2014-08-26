@@ -111,9 +111,9 @@ CORE_roster.updateAmount = function() {
 	}
 
 	// trigger wizard button update
-	var selectedTab = $('#roster_tabs').tabs('option', 'selected');
-	$('#roster_tabs').find('li').eq(selectedTab).removeClass('ui-tabs-selected');
-	$('#roster_tabs').tabs('select', selectedTab);
+	var activeTab = $('#roster_tabs').tabs('option', 'active');
+	$('#roster_tabs').find('li').eq(activeTab).removeClass('ui-tabs-active');
+	$('#roster_tabs').tabs('select', activeTab);
 
 	$('#total-total').html(numberChildcareSignedUp*childcareAmount + peopleAmount*numberSignedUp);
 	$('#balance').html($('#total-total').html() - totalDue);
