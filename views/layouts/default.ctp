@@ -14,14 +14,16 @@
 		$this->AssetCompress->css('960-modal');
 		$this->AssetCompress->css('font-face');
 		$this->AssetCompress->css('menu');
-		$this->AssetCompress->css('jquery.qtip');
+		//$this->AssetCompress->css('jquery.qtip');
+		echo $this->Html->css('//qtip2.com/v/2.2.0/basic/jquery.qtip.css');
 		$this->AssetCompress->css('jquery-ui');
 		$this->AssetCompress->css('styles');
 		$this->AssetCompress->css('tables');
 		$this->AssetCompress->css('wysiwyg');
 		$this->AssetCompress->css('email');
 
-		$this->AssetCompress->css('fullcalendar');
+		//$this->AssetCompress->css('fullcalendar');
+		$this->AssetCompress->css('fullcalendar164');
 		$this->AssetCompress->css('calendar');
 
 		echo '<!--[if lt IE 9]>'.$this->Html->css('ie').'<![endif]-->';
@@ -29,13 +31,16 @@
 		// google cdn scripts
 		$min = Configure::read('debug') == 0 ? '.min' : null;
 		echo $this->Html->script('//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery'.$min.'.js');
+		echo $this->Html->script('//code.jquery.com/jquery-migrate-1.2.1.js');
 		echo $this->Html->script('//ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui'.$min.'.js');
 
 		// vendor scripts
 		$this->AssetCompress->script('jquery.plugins/jquery.form');
-		$this->AssetCompress->script('jquery.plugins/jquery.qtip');
+		//$this->AssetCompress->script('jquery.plugins/jquery.qtip');
+		echo $this->Html->script('//qtip2.com/v/2.2.0/basic/jquery.qtip.js');
 		$this->AssetCompress->script('jquery.plugins/jquery.equalheights');
-		$this->AssetCompress->script('jquery.plugins/jquery.fullcalendar');
+		//$this->AssetCompress->script('jquery.plugins/jquery.fullcalendar');
+		$this->AssetCompress->script('jquery.plugins/jquery.fullcalendar164');
 		$this->AssetCompress->script('wysiwyg/advanced');
 		$this->AssetCompress->script('wysiwyg/wysihtml5-0.3.0.min');
 
