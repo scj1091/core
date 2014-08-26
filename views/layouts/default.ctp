@@ -30,12 +30,13 @@
 
 		// google cdn scripts
 		$min = Configure::read('debug') == 0 ? '.min' : null;
-		echo $this->Html->script('//ajax.googleapis.com/ajax/libs/jquery/1.8.3/jquery'.$min.'.js');
+		echo $this->Html->script('//ajax.googleapis.com/ajax/libs/jquery/1.9.1/jquery'.$min.'.js');
 		echo $this->Html->script('//code.jquery.com/jquery-migrate-1.2.1.js');
 		echo $this->Html->script('//ajax.googleapis.com/ajax/libs/jqueryui/1.8.24/jquery-ui'.$min.'.js');
 
 		// vendor scripts
-		$this->AssetCompress->script('jquery.plugins/jquery.form');
+		//$this->AssetCompress->script('jquery.plugins/jquery.form');
+		echo $this->Html->script('//malsup.github.com/jquery.form.js');
 		//$this->AssetCompress->script('jquery.plugins/jquery.qtip');
 		echo $this->Html->script('//qtip2.com/v/2.2.0/basic/jquery.qtip.js');
 		$this->AssetCompress->script('jquery.plugins/jquery.equalheights');
