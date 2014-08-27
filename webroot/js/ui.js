@@ -304,18 +304,16 @@ CORE.attachAjaxBehavior = function() {
 CORE.tabs = function(id, taboptions, options) {
 	// use user defined options if defined
 	var useOptions = {
-		beforeLoad: function(event, ui) {
-			ui.ajaxSettings = {
-				error: function(XMLHttpRequest) {
-					if (XMLHttpRequest.status == '403') {
-						redirect('/login');
-					}
+		ajaxOptions: {
+			error: function(XMLHttpRequest) {
+				if (XMLHttpRequest.status == '403') {
+					redirect('/login');
 				}
-			};
+			}
 		},
-		beforeActivate: function(event, ui) {
+		select: function(event, ui) {
 			// set appropriate xhr context
-			$(event.target).tabs('option', 'ajaxOptions', {context: ui.newPanel});
+			$(event.target).tabs('option', 'ajaxOptions', {context: ui.panel});
 		},
 		load: function(event, ui) {
 			var url = $(ui.tab).data('load.tabs');
@@ -335,8 +333,7 @@ CORE.tabs = function(id, taboptions, options) {
 	var tabbed = $('#'+id);
 
 	if (tabbed.find('ul li.selected-tab').length) {
-		useOptions.active = tabbed.find('ul li.selected-tab').index();
-		var tabsLength = tabbed.find('ul').length();
+		useOptions.selected = tabbed.find('ul li.selected-tab').index();
 	}
 
 	tabbed.tabs(useOptions);
@@ -352,27 +349,27 @@ CORE.tabs = function(id, taboptions, options) {
 		});
 		if (options.next != undefined) {
 			// hide next button if it automatically was selected (cookie)
-			if (tabbed.tabs('option', 'active')+1 == tabsLength) {
+			if (tabbed.tabs('option', 'selected')+1 == tabbed.tabs('length')) {
 				$('#'+options.next).hide();
 			}
 
 			$('#'+options.next).on('click', function(event, ui) {
-				var active = tabbed.tabs('option', 'active');
+				var selected = tabbed.tabs('option', 'selected');
 				// select next visible tab
-				tabbed.children('ul').children('li:nth-child('+(active+1)+')').nextAll(':visible').eq(0).children('a').click();
+				tabbed.children('ul').children('li:nth-child('+(selected+1)+')').nextAll(':visible').eq(0).children('a').click();
 			});
 		}
 
 		if (options.previous != undefined) {
 			// hide prev button if it automatically was selected (cookie)
-			if (tabbed.tabs('option', 'active') == 0) {
+			if (tabbed.tabs('option', 'selected') == 0) {
 				$('#'+options.previous).hide();
 			}
 
 			$('#'+options.previous).on('click', function(event, ui) {
-				var active = tabbed.tabs('option', 'active');
+				var selected = tabbed.tabs('option', 'selected');
 				// select previous visible tab
-				tabbed.children('ul').children('li:nth-child('+(active+1)+')').prevAll(':visible').eq(0).children('a').click();
+				tabbed.children('ul').children('li:nth-child('+(selected+1)+')').prevAll(':visible').eq(0).children('a').click();
 			});
 		}
 
@@ -381,7 +378,7 @@ CORE.tabs = function(id, taboptions, options) {
 				options.alwaysAllowSubmit = true;
 			}
 
-			if (!options.alwaysAllowSubmit && tabbed.tabs('option', 'active')+1 != tabsLength) {
+			if (!options.alwaysAllowSubmit && tabbed.tabs('option', 'selected')+1 != tabbed.tabs('length')) {
 				$('#'+options.submit).hide();
 			}
 		}
@@ -392,10 +389,10 @@ CORE.tabs = function(id, taboptions, options) {
 				var next = $('#'+options.next);
 				var previous = $('#'+options.previous);
 				var submit = $('#'+options.submit);
-				var active = ui.index;
+				var selected = ui.index;
 
-				var nextTab = tabbed.children('ul').children('li:nth-child('+(active+1)+')').nextAll(':visible').eq(0);
-				var prevTab = tabbed.children('ul').children('li:nth-child('+(active+1)+')').prevAll(':visible').eq(0);
+				var nextTab = tabbed.children('ul').children('li:nth-child('+(selected+1)+')').nextAll(':visible').eq(0);
+				var prevTab = tabbed.children('ul').children('li:nth-child('+(selected+1)+')').prevAll(':visible').eq(0);
 
 				if (nextTab.length == 0) {
 					next.hide();
