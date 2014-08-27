@@ -342,7 +342,18 @@ if ($activeUser['User']['id'] == $profile['User']['id'] && empty($activeUser['Us
 
 		</div>
 
-		<div id="household">
+		<?php $householdUrl = Router::url(array(
+			'controller' => 'households',
+			'action' => 'index',
+			'User' => $profile['User']['id']
+		));
+		
+		$paymentsUrl = Router::url(array(
+			'controller' => 'payments',
+			'action' => 'index',
+			'User' => $profile['User']['id']
+		)); ?>
+		<div id="household" data-core-update-url="<?php echo $householdUrl; ?>">
 			<?php
 			echo $this->requestAction('/households/index', array(
 				'renderAs' => 'ajax',
@@ -356,7 +367,7 @@ if ($activeUser['User']['id'] == $profile['User']['id'] && empty($activeUser['Us
 				));
 			?>
 		</div>
-		<div id="payments">
+		<div id="payments" data-core-update-url="<?php echo $paymentsUrl; ?>">
 			<?php
 			echo $this->requestAction('/payments/index', array(
 				'renderAs' => 'ajax',
@@ -371,8 +382,13 @@ if ($activeUser['User']['id'] == $profile['User']['id'] && empty($activeUser['Us
 			?>
 		</div>
 
-		<?php if ($this->Permission->check(array('controller' => 'comments', 'User' => $profile['User']['id']))): ?>
-		<div id="comments">
+		<?php if ($this->Permission->check(array('controller' => 'comments', 'User' => $profile['User']['id']))):
+			$commentsUrl = Router::url(array(
+				'controller' => 'comments',
+				'action' => 'index',
+				'User' => $profile['User']['id']
+			)); ?>
+		<div id="comments" data-core-update-url="<?php echo $commentsUrl; ?>">
 			<?php
 			echo $this->requestAction('/comments/index', array(
 				'renderAs' => 'ajax',
@@ -388,8 +404,13 @@ if ($activeUser['User']['id'] == $profile['User']['id'] && empty($activeUser['Us
 		</div>
 		<?php endif; ?>
 
-		<?php if ($this->Permission->check(array('controller' => 'user_documents', 'User' => $profile['User']['id']))): ?>
-		<div id="documents">
+		<?php if ($this->Permission->check(array('controller' => 'user_documents', 'User' => $profile['User']['id']))):
+			$documentsUrl = Router::url(array(
+				'controller' => 'user_documents',
+				'action' => 'index',
+				'User' => $profile['User']['id']
+			)); ?>
+		<div id="documents" data-core-update-url="<?php echo $documentsUrl; ?>">
 			<?php
 			echo $this->requestAction('/user_documents/index', array(
 				'renderAs' => 'ajax',
@@ -405,8 +426,13 @@ if ($activeUser['User']['id'] == $profile['User']['id'] && empty($activeUser['Us
 		</div>
 		<?php endif; ?>
 
-		<?php if ($this->Permission->check(array('controller' => 'sys_emails', 'User' => $profile['User']['id']))): ?>
-		<div id="email">
+		<?php if ($this->Permission->check(array('controller' => 'sys_emails', 'User' => $profile['User']['id']))):
+			$emailUrl = Router::url(array(
+				'controller' => 'sys_emails',
+				'action' => 'index',
+				'User' => $profile['User']['id']
+			)); ?>
+		<div id="email" data-core-update-url="<?php echo $emailUrl; ?>">
 			<?php
 			echo $this->requestAction('/sys_emails/index', array(
 				'renderAs' => 'ajax',

@@ -304,7 +304,7 @@ CORE.attachAjaxBehavior = function() {
 CORE.tabs = function(id, taboptions, options) {
 	// use user defined options if defined
 	var useOptions = {
-		beforeLoad: function(ui) {
+		beforeLoad: function(event, ui) {
 			ui.ajaxSettings.error = function(XMLHttpRequest) {
 				if (XMLHttpRequest.status == '403') {
 					redirect('/login');
@@ -315,12 +315,12 @@ CORE.tabs = function(id, taboptions, options) {
 			// set appropriate xhr context
 			$(event.target).tabs('option', 'ajaxOptions', {context: ui.newPanel});
 		},
-		create: function(event) {
+		/*create: function(event) {
 			$(event.target).find('.ui-tabs-nav li a').each(function() {
 				var hash = $(this).attr('href');
 				$(hash).data('core-update-url', $(this).data('load.tabs'))
 			})
-		}
+		}*/
 	};
 	if (taboptions != undefined) {
 		useOptions = $.extend(useOptions, taboptions);
@@ -568,9 +568,9 @@ CORE.autoComplete = function(id, datasource, onSelect) {
 				return false;
 			}
 		}
-	}).data('autocomplete')._renderItem = function(ul, item) {
+	}).data('uiAutocomplete')._renderItem = function(ul, item) {
 		return $('<li></li>')
-			.data('item.autocomplete', item)
+			.data('ui-autocomplete-item', item)
 			.append($('<a style="display:block" class="clearfix"></a>').html(stripslashes(item.label)))
 			.appendTo(ul);
 	};
@@ -702,6 +702,6 @@ CORE.closeModals = function(modalName) {
  * @link http://bugs.jqueryui.com/ticket/4671
  * @link https://github.com/ksenzee/views3ui/blob/bdf8d279d0a78b6a921e446fc7448fabffa3322d/js/jquery.ui.dialog.patch.js
  */
-if ($.ui && $.ui.dialog) {
+/*if ($.ui && $.ui.dialog) {
 	$.ui.dialog.overlay.events = $.map('focus,keydown,keypress'.split(','), function(event) { return event + '.dialog-overlay'; }).join(' ');
-}
+}*/
