@@ -304,14 +304,14 @@ CORE.attachAjaxBehavior = function() {
 CORE.tabs = function(id, taboptions, options) {
 	// use user defined options if defined
 	var useOptions = {
-		ajaxOptions: {
-			error: function(XMLHttpRequest) {
+		beforeLoad: function(ui) {
+			ui.ajaxSettings.error = function(XMLHttpRequest) {
 				if (XMLHttpRequest.status == '403') {
 					redirect('/login');
 				}
 			}
 		},
-		select: function(event, ui) {
+		beforeActivate: function(event, ui) {
 			// set appropriate xhr context
 			$(event.target).tabs('option', 'ajaxOptions', {context: ui.panel});
 		},
