@@ -146,23 +146,22 @@ CORE.init = function() {
 	CORE.initNavigation();
 	// IE is too agressive in its caching
 	$.ajaxSetup({
-		cache: false,
-		error: function(XMLHttpRequest) {
-			if (XMLHttpRequest.status == '403') {
-				redirect('/login');
-			}
-		},
-		beforeSend: function(x, s) {
-			// don't show the loading indicator on background requests
-			if (s.update !== undefined && s.update == false) {
-				return;
-			}
-			// if the XHR's context is not set correctly, the loading spinner
-			// will not show
-			CORE.setLoading(this);
+		cache: false
+	});
+	$(document).ajaxError(function(event, xhr, ajaxSettings, thrownError) {
+		if (xhr.status == '403') {
+			redirect('/login');
 		}
 	});
-}
+	$(document).ajaxSend(function(event, xhr, ajaxOptions) {
+		//Don't show spinner on background requests
+		if (ajaxOptions.update === false)  {
+			return;
+		}
+		//Display spinner on target
+		CORE.setLoading(event.target);
+	});
+};
 
 /**
  * These are all items that should be initialized on a new page or when a modal

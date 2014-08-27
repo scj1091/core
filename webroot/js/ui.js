@@ -313,7 +313,7 @@ CORE.tabs = function(id, taboptions, options) {
 		},
 		beforeActivate: function(event, ui) {
 			// set appropriate xhr context
-			$(event.target).tabs('option', 'ajaxOptions', {context: ui.panel});
+			$(event.target).tabs('option', 'ajaxOptions', {context: ui.newPanel});
 		},
 		load: function(event, ui) {
 			var url = $(ui.tab).data('load.tabs');
