@@ -46,7 +46,7 @@ CORE.update = function(element, html) {
  * @return object The Ajax object
  */
 CORE.request = function(element, options) {
-	var container = $(element).closest('[data-core-update-url]');
+	var container = $(element).closest('[data-core-update-url]'); //The element with data-core-update-url contains the update from the given url
 
 	// use user defined options if defined
 	var useOptions = {
@@ -59,15 +59,15 @@ CORE.request = function(element, options) {
 	useOptions = $.extend(useOptions, options || {});
 
 	if (useOptions.url == null) {
-		useOptions.url = container.data('core-update-url');
+		useOptions.url = container.data('core-update-url'); //If url not set, use the url in the element
 	}
 
 	if (useOptions.update !== false) {
-		container.data('core-update-url', useOptions.url)
+		container.data('core-update-url', useOptions.url) //Update the container element with the loaded url
 		var success = useOptions.success;
-		useOptions.success = function(data) {
+		useOptions.success = function(data) { //On success, set container's html contents to ajax results
 			container.html(data);
-			success(data);
+			success(data); //call user-specified success function
 		}
 		delete useOptions.update;
 	}
@@ -124,7 +124,7 @@ CORE.showFlash = function(data) {
  *
  * @param Element container The container that has loading content
  */
-CORE.setLoading = function(container) {
+CORE.setLoading = function(container) { //set loading gif, note this doesn't use jquery-ui tabs
 	container = $(container);
 	if (!container.data('core-update-url')) {
 		return;
@@ -169,9 +169,9 @@ CORE.init = function() {
  * opens
  */
 CORE.initUI = function() {
-	$('.equal-height:visible > div').equalHeights();
+	$('.equal-height:visible > div').equalHeights(); //used to display receipts and household members as equal height tiles
 	// hide flash message
-	$('div[id^=flash], div#authMessage').appendTo('#wrapper').hide().delay(100).slideDown().delay(5000).slideUp(function() { $(this).remove(); });
+	$('div[id^=flash], div#authMessage').appendTo('#wrapper').hide().delay(100).slideDown().delay(5000).slideUp(function() { $(this).remove(); }); 
 	// attach tabbed behavior
 	CORE.attachTabbedBehavior();
 	// attach modal behavior
@@ -187,13 +187,13 @@ CORE.initUI = function() {
 }
 
 // extend `$.data()` to update the dom as well
-var origDataFn = $.fn.data;
+var origDataFn = $.fn.data; //could we just use $.attr() instead of redefining $.data()?
 $.fn.data = function() {
 	if (arguments[0] == 'core-update-url' && arguments[1] != undefined) {
 		if (arguments[1] !== '' && !arguments[1].match(/page:/)) {
-			var parsed = document.createElement('a');
+			var parsed = document.createElement('a'); //not quite sure what this magic does
 			parsed.href = arguments[1];
-			var path = parsed.pathname.replace(/^\/|\/$/g, '');
+			var path = parsed.pathname.replace(/^\/|\/$/g, ''); //strip leading/tailing slashes
 			var pieces = path.split('/');
 			if (pieces.length == 1 || (CORE.plugin !== '' && pieces.length == 2)) {
 				pieces.push('index');

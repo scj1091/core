@@ -17,10 +17,10 @@ if (CORE == undefined) {
  */
 CORE.modal = function(id, options) {
 	if ($('.core-modal').length == 0) {
-		$('#wrapper').append('<div id="modal" class="container_12 core-modal"></div>');
+		$('#wrapper').append('<div id="modal" class="container_12 core-modal"></div>'); //if there's no modal view container, add one
 	}
 
-	var _defaultOptions = {
+	var _defaultOptions = { //default options
 		modal: true,
 		width: 700,
 		height: 'auto',
@@ -30,22 +30,22 @@ CORE.modal = function(id, options) {
 	}
 
 	// use user defined options if defined
-	var useOptions = $.extend(_defaultOptions, options || {});
+	var useOptions = $.extend(_defaultOptions, options || {}); //argument options
 
-	$('#'+id).click(function(event) {
+	$('#'+id).click(function(event) { //add onclick listener
 		// stop link
-		event.preventDefault();
+		event.preventDefault();  //don't follow link
 
 		// get options
-		var options = $(this).data('core-modal-options');
+		var options = $(this).data('core-modal-options'); //grab the options from data on the modal link element
 
 		// close callback
 		options.close = function(event, ui) {
-			if ($('#modal').dialog('option', 'update')) {
-				var originator = $('#modal').data('core-modal-originator');
-				CORE.update(originator);
+			if ($('#modal').dialog('option', 'update')) { //do we need to update a container on modal close?
+				var originator = $('#modal').data('core-modal-originator'); //find the element to update
+				CORE.update(originator); //update it
 			}
-			$('#modal').empty();
+			$('#modal').empty(); //clear modal
 			// stop the request if closed prematurely
 			var xhr = $('#modal').data('xhr');
 			if (xhr) {
@@ -61,7 +61,7 @@ CORE.modal = function(id, options) {
 		$('#modal').data('core-modal-originator', $('#'+id));
 
 		// load the link into the modal
-		$("#modal").parent().position({
+		$("#modal").parent().position({ //start with the modal window (parent of modal view container) centered
 			my: 'center',
 			at: 'center',
 			of: window
@@ -70,24 +70,24 @@ CORE.modal = function(id, options) {
 			url: this.href,
 			success: function(data, textStatus, xhr) {
 				$("#modal").html(data);
-				if ($('#modal').height() < $(window).height()-50) {
+				if ($('#modal').height() < $(window).height()-50) { //if at least 50px less than window, recenter
 					$("#modal").parent().position({
 						my: 'center',
 						at: 'center',
 						of: window
 					});
 				} else {
-					$("#modal").parent().css({top: '10px'})
+					$("#modal").parent().css({top: '10px'}) //else offset from top of window by 10px
 				}
 			},
 			context: $("#modal")
 		});
-		$("#modal").data('xhr', xhr);
+		$("#modal").data('xhr', xhr); //set xhr object in data
 
 		return false;
 	});
 
-	$('#'+id).data('core-modal-options', useOptions);
+	$('#'+id).data('core-modal-options', useOptions); //set options on modal link object
 }
 
 /**
@@ -185,17 +185,17 @@ CORE.tooltip = function(ele, content, options) {
  */
 CORE.attachTabbedBehavior = function() {
 	$('.core-tabs').each(function() {
-		if ($(this).data('hasTabs') == undefined) {
-			var options = {};
-			if ($(this).data('cookie') != undefined) {
-				options.cookie = $(this).data('cookie');
+		if ($(this).data('hasTabs') == undefined) { //if not initialized
+			var options = {}; 
+			if ($(this).data('cookie') != undefined) { //create cookie
+				options.cookie = $(this).data('cookie'); //options.cookie is deprecated in jq-ui 1.9
 			}
 			if (!$(this).prop('id')) {
-				$(this).prop('id', unique('link-'));
+				$(this).prop('id', unique('link-')); //make sure each tab has a unique id
 			}
-			CORE.tabs($(this).prop('id'), options);
-			$(this).data('hasTabs', true);
-		}
+			CORE.tabs($(this).prop('id'), options); //attach tab
+			$(this).data('hasTabs', true); //don't attach twice	
+	}
 	});
 
 	return true;
@@ -304,25 +304,25 @@ CORE.attachAjaxBehavior = function() {
 CORE.tabs = function(id, taboptions, options) {
 	// use user defined options if defined
 	var useOptions = {
-		ajaxOptions: {
+		ajaxOptions: { //no more  ajaxOptions, directly set the ajax settings via beforeLoad
 			error: function(XMLHttpRequest) {
-				if (XMLHttpRequest.status == '403') {
+				if (XMLHttpRequest.status == '403') { //if 403 forbidden redirect browser to login (e.g. timed out in background)
 					redirect('/login');
 				}
 			}
 		},
-		select: function(event, ui) {
+		select: function(event, ui) { //now called beforeActivate
 			// set appropriate xhr context
-			$(event.target).tabs('option', 'ajaxOptions', {context: ui.panel});
-		},
+			$(event.target).tabs('option', 'ajaxOptions', {context: ui.panel}); 	
+	},
 		load: function(event, ui) {
 			var url = $(ui.tab).data('load.tabs');
 			$(ui.panel).data('core-update-url', url);
 		},
-		create: function(event) {
-			$(event.target).find('.ui-tabs-nav li a').each(function() {
-				var hash = $(this).attr('href');
-				$(hash).data('core-update-url', $(this).data('load.tabs'))
+		create: function(event) { //on tab create...
+			$(event.target).find('.ui-tabs-nav li a').each(function() { //find each nav li anchor and...
+				var hash = $(this).attr('href'); //hash = link url
+				$(hash).data('core-update-url', $(this).data('load.tabs')) //
 			})
 		}
 	};
@@ -356,7 +356,7 @@ CORE.tabs = function(id, taboptions, options) {
 			$('#'+options.next).on('click', function(event, ui) {
 				var selected = tabbed.tabs('option', 'selected');
 				// select next visible tab
-				tabbed.children('ul').children('li:nth-child('+(selected+1)+')').nextAll(':visible').eq(0).children('a').click();
+				tabbed.tabs('option', 'selected', selected+1);
 			});
 		}
 
@@ -369,7 +369,7 @@ CORE.tabs = function(id, taboptions, options) {
 			$('#'+options.previous).on('click', function(event, ui) {
 				var selected = tabbed.tabs('option', 'selected');
 				// select previous visible tab
-				tabbed.children('ul').children('li:nth-child('+(selected+1)+')').prevAll(':visible').eq(0).children('a').click();
+				tabbed.tabs('option', 'selected', selected-1);
 			});
 		}
 

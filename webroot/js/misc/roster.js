@@ -18,8 +18,13 @@ CORE_roster.init = function() {
 	$('#DefaultPaymentOptionId').change();
 	$('#RosterAddressId').change();
 	// by default, click the first available tab under answers
-	$('#questions_tab a').on('click', function() {
+	/*$('#questions_tab a').on('click', function() {
 		$('#question_tabs > ul:not(.admin) li.member-checked:first a').click()
+	});*/
+	debugger;
+	var rosterTabs = $('#roster_tabs');
+	rosterTabs.on("tabsselect", function(event, ui) {
+		$('#question_tabs').tabs('option', 'selected', 0);
 	});
 	$('input[id^=Child]').on('change', CORE_roster.updateAmount);
 	$('#DefaultPayLater').on('change', function() {
