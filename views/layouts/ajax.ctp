@@ -27,6 +27,5 @@ echo $this->Session->flash();
 
 echo $content_for_layout;
 
-$this->Js->buffer('CORE.initUI();');
 echo $this->Js->writeBuffer();
 

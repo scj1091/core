@@ -54,6 +54,7 @@
 
 		// setup
 		$this->Js->buffer('CORE.init();');
+		$this->Js->buffer('CORE.initUI();');
 		$element = addslashes(str_replace(array("\r", "\r\n", "\n"), '', $this->element('wysiwyg_toolbar')));
 		$this->Js->buffer("CORE.wysiwygToolbar = '$element';", true);
 		if ($this->params['plugin']) {
